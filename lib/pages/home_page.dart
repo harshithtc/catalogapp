@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: Text("Catalog App")),
       body: Center(child: Text("welcome to $days days challenge by $name")),
-      drawer: Drawer()
+      drawer: Drawer(),
     );
   }
 }
