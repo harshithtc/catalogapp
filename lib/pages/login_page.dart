@@ -12,12 +12,13 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   final _formkey = GlobalKey<FormState>();
 
-  moveToHme(BuildContext context) async {
+  moveToHome() async {
     if (_formkey.currentState?.validate() ?? false) {
       setState(() {
         changeButton = true;
       });
       await Future.delayed(Duration(seconds: 1));
+      if (!mounted) return;
       await Navigator.pushNamed(context, MyRoutes.homeRoute);
       setState(() {
         changeButton = false;
@@ -89,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                       ),
 
                       child: InkWell(
-                        onTap: () => moveToHme(context),
+                        onTap: () => moveToHome(),
                         child: AnimatedContainer(
                           duration: Duration(seconds: 1),
                           width: changeButton ? 50 : 150,
