@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_catalog/utils/routes.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,14 +11,14 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
-  final _formkey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   moveToHome() async {
-    if (_formkey.currentState?.validate() ?? false) {
+    if (_formKey.currentState?.validate() ?? false) {
       setState(() {
         changeButton = true;
       });
-      await Future.delayed(Duration(seconds: 1));
+      await Future.delayed(const Duration(seconds: 1));
       if (!mounted) return;
       await Navigator.pushNamed(context, MyRoutes.homeRoute);
       setState(() {
@@ -28,92 +29,129 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      color: Colors.white,
-      child: SingleChildScrollView(
-        child: Form(
-          key: _formkey,
-          child: Column(
-            children: [
-              SizedBox(height: 50),
-              Image.asset("assets/images/shoppingcart1.png", fit: BoxFit.cover),
-              SizedBox(height: 20),
-              Text(
-                "Catalog",
-                style: TextStyle(
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  fontStyle: FontStyle.normal,
-                  letterSpacing: 5,
-                ),
-              ),
-              SizedBox(height: 20),
-              Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 18.0,
-                  horizontal: 32.0,
-                ),
-                child: Column(
-                  children: [
-                    TextFormField(
-                      decoration: InputDecoration(
-                        hintText: "enter username",
-                        labelText: "username",
+    return Scaffold(
+      body: Container(
+        color: const Color(0xff403b58),
+        width: double.infinity,
+        height: double.infinity,
+        child: Center(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            child: Form(
+              key: _formKey,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Column(
+                    children: [
+                      Image.asset(
+                        "assets/images/inventra_logo_transparent.png",
+                        height: 240,
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please enter the username";
-                        }
-                        return null;
-                      },
-                    ),
-                    TextFormField(
-                      obscureText: true,
-                      decoration: InputDecoration(
-                        hintText: "enter password",
-                        labelText: "password",
+                      const SizedBox(height: 0),
+
+                      const SizedBox(height: 0),
+                    ],
+                  ),
+
+                  // Username field
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.person, color: Colors.white),
+                      labelText: "Username",
+                      labelStyle: const TextStyle(color: Colors.white),
+                      hintText: "Enter your username",
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: const BorderSide(color: Colors.white38),
                       ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "please enter the password";
-                        } else if (value.length < 8) {
-                          return "password must be 8 characters";
-                        }
-                        return null;
-                      },
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
                     ),
-                    SizedBox(height: 20.0),
-                    Material(
-                      color: Colors.blue,
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the username";
+                      }
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Password field
+                  TextFormField(
+                    style: const TextStyle(color: Colors.white),
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.lock, color: Colors.white),
+                      labelText: "Password",
+                      labelStyle: const TextStyle(color: Colors.white),
+                      hintText: "Enter your password",
+                      hintStyle: const TextStyle(color: Colors.white70),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: const BorderSide(color: Colors.white38),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12.0),
+                        borderSide: const BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return "Please enter the password";
+                      } else if (value.length < 8) {
+                        return "Password must be at least 8 characters";
+                      }
+                      return null;
+                    },
+                  ),
+
+                  const SizedBox(height: 30),
+
+                  // Login Button
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 600),
+                    width: changeButton ? 50 : 180,
+                    height: 50,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
                       borderRadius: BorderRadius.circular(
-                        changeButton ? 50 : 8,
+                        changeButton ? 30 : 12,
                       ),
-
-                      child: InkWell(
-                        onTap: () => moveToHome(),
-                        child: AnimatedContainer(
-                          duration: Duration(seconds: 1),
-                          width: changeButton ? 50 : 150,
-                          height: 50,
-                          alignment: Alignment.center,
-
-                          child: changeButton
-                              ? Icon(Icons.done, color: Colors.white)
-                              : Text(
-                                  "login",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18,
-                                  ),
-                                ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 10,
+                          offset: Offset(0, 5),
                         ),
+                      ],
+                    ),
+                    child: InkWell(
+                      onTap: moveToHome,
+                      child: Center(
+                        child: changeButton
+                            ? const Icon(Icons.done, color: Color(0xff403b58))
+                            : Text(
+                                "Login",
+                                style: GoogleFonts.poppins(
+                                  color: Color(0xff403b58),
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                ),
+                              ),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 40),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
