@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class CatalogModel {
   static List<Item> items = [
     Item(
@@ -15,6 +17,23 @@ class CatalogModel {
           "https://i.pinimg.com/736x/24/22/32/24223258deb2711a6cfb6ffe2ba3b5e9.jpg",
     ),
   ];
+  //  Get item by ID
+  Item? getById(int id) {
+    try {
+      return items.firstWhere((item) => item.id == id);
+    } catch (e) {
+      return null; // If not found
+    }
+  }
+
+  //  Get item by position (index)
+  Item? getByPosition(int pos) {
+    if (pos >= 0 && pos < items.length) {
+      return items[pos];
+    } else {
+      return null;
+    }
+  }
 }
 
 class Item {

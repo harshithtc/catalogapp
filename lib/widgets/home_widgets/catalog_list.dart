@@ -68,7 +68,7 @@ class CatalogItem extends StatelessWidget {
                             MyTheme.darkBluishColor,
                           ),
                         ),
-                        child: "Buy".text.color(MyTheme.whiteish).make(),
+                        child: "Buy now".text.color(MyTheme.whiteish).make(),
                       ),
                     ),
                   ],
