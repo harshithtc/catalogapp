@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_catalog/core/store.dart';
 import 'package:flutter_catalog/models/cart.dart';
 import 'package:flutter_catalog/models/catalog.dart';
 import 'package:flutter_catalog/widgets/themes.dart';
@@ -9,20 +10,20 @@ class AddToCart extends StatelessWidget {
   final Item catalog;
   AddToCart({Key? key, required this.catalog}) : super(key: key);
 
-  final CartModel _cart = CartModel(); // keep a single instance
-
   @override
   Widget build(BuildContext context) {
-    // contains() already returns bool, no need for ??
-    bool isInCart = _cart.items.contains(catalog);
+    // Rebuild when AddMutation (and optionally RemoveMutation) occurs
+    VxState.watch(context, on: [AddMutation, RemoveMutation]);
+
+    final cart = (VxState.store as MyStore).cart;
+
+    // Prefer checking by id unless Item overrides == and hashCode
+    final bool isInCart = cart.items.any((i) => i.id == catalog.id);
 
     return ElevatedButton(
       onPressed: () {
         if (!isInCart) {
-          _cart.add(catalog);
-        } else {
-          _cart.remove(catalog);
-          // setState(() {});
+          AddMutation(catalog);
         }
       },
       style: ButtonStyle(
