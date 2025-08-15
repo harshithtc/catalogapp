@@ -1,10 +1,14 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
+import 'package:flutter_catalog/widgets/home_widgets/add_to_cart.dart';
+import 'package:velocity_x/velocity_x.dart';
+
+import 'package:flutter_catalog/models/cart.dart';
 import 'package:flutter_catalog/models/catalog.dart';
 import 'package:flutter_catalog/pages/home_detail_page.dart';
 import 'package:flutter_catalog/pages/home_page.dart';
 import 'package:flutter_catalog/widgets/home_widgets/catalog_image.dart';
 import 'package:flutter_catalog/widgets/themes.dart';
-import 'package:velocity_x/velocity_x.dart';
 
 class CatalogList extends StatelessWidget {
   const CatalogList({super.key});
@@ -61,15 +65,7 @@ class CatalogItem extends StatelessWidget {
                     Padding(
                       padding: EdgeInsetsGeometry.only(right: 16.0),
 
-                      child: ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                          backgroundColor: WidgetStatePropertyAll(
-                            MyTheme.darkBluishColor,
-                          ),
-                        ),
-                        child: "Buy now".text.color(MyTheme.whiteish).make(),
-                      ),
+                      child: AddToCart(catalog: catalog),
                     ),
                   ],
                 ),
