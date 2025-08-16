@@ -1,13 +1,12 @@
 import 'dart:convert';
 
 class CatalogModel {
-  
   static List<Item> items = [
     Item(
       id: 1,
       brand: "Samsung",
       model: "Galaxy S24 Ultra",
-      price: 129999,
+      price: 1559.0, // ✅ double value
       storage: "512GB",
       ram: "12GB",
       camera: "200MP + 12MP + 10MP + 10MP",
@@ -18,6 +17,7 @@ class CatalogModel {
           "https://i.pinimg.com/736x/24/22/32/24223258deb2711a6cfb6ffe2ba3b5e9.jpg",
     ),
   ];
+
   //  Get item by ID
   Item? getById(int id) {
     try {
@@ -41,7 +41,7 @@ class Item {
   final int id;
   final String brand;
   final String model;
-  final int price;
+  final double price; // ✅ changed to double
   final String storage;
   final String ram;
   final String camera;
@@ -71,7 +71,7 @@ class Item {
       id: map['id'],
       brand: map['brand'],
       model: map['model'],
-      price: map['price'],
+      price: (map['price'] as num).toDouble(), // ✅ handles both int & double
       storage: map['storage'],
       ram: map['ram'],
       camera: map['camera'],
@@ -83,7 +83,7 @@ class Item {
   }
 
   // ✅ toJson method
-  toMap() => {
+  dynamic toMap() => {
     'id': id,
     'brand': brand,
     'model': model,

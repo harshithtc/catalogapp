@@ -32,7 +32,8 @@ class ItemWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "₹${item.price}",
+              "\$${item.price}",
+
               style: const TextStyle(
                 color: Color.fromARGB(255, 52, 7, 232),
                 fontWeight: FontWeight.bold,

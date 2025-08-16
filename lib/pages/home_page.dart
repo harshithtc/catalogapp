@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_catalog/core/store.dart';
 import 'package:flutter_catalog/models/cart.dart';
 import 'dart:convert';
@@ -26,7 +25,7 @@ class _HomePageState extends State<HomePage> {
   final name = "codeeeee";
 
   final url =
-      "https://raw.githubusercontent.com/harshithtc/flutter_catalog_data/refs/heads/main/catalog.json ";
+      "https://raw.githubusercontent.com/harshithtc/flutter_catalog_data/refs/heads/main/catalog.json";
 
   @override
   void initState() {

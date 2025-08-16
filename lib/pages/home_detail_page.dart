@@ -21,7 +21,8 @@ class HomeDetailPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
-            catalog.price.text.xl4.bold.make(),
+            "\$${catalog.price.toStringAsFixed(2)}".text.xl4.bold.make(),
+
             AddToCart(catalog: catalog).wh(150, 50),
           ],
         ).p32(),
