@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_catalog/main.dart'; // import to access `api`
 import 'package:flutter_catalog/utils/routes.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -14,12 +15,31 @@ class _LoginPageState extends State<LoginPage> {
   bool changeButton = false;
   final _formKey = GlobalKey<FormState>();
 
-  dynamic moveToHome() async {
-    if (_formKey.currentState?.validate() ?? false) {
-      setState(() => changeButton = true);
-      await Future.delayed(const Duration(seconds: 1));
+  String email = "";
+  String password = "";
+
+  Future<void> _handleLogin() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    setState(() => changeButton = true);
+
+    try {
+      // 🔑 Call backend API
+      final token = await api.login(email: email, password: password);
+
+      // ✅ Save token for authenticated requests
+      api.setToken(token);
+
+      // (Optional) Save to flutter_secure_storage here
+
       if (!mounted) return;
-      await Navigator.pushNamed(context, MyRoutes.homeRoute);
+      await Navigator.pushReplacementNamed(context, MyRoutes.homeRoute);
+    } catch (e) {
+      // Show error
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Login failed: $e")));
+    } finally {
       setState(() => changeButton = false);
     }
   }
@@ -31,21 +51,18 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: Stack(
         children: [
-          // Dark Blue Background
+          // Background
           Container(
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [
-                  Color(0xFF0D1B2A),
-                  Color(0xFF1B263B),
-                ], // dark navy blue shades
+                colors: [Color(0xFF0D1B2A), Color(0xFF1B263B)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
             ),
           ),
 
-          // Glass Card
+          // Login Card
           Center(
             child: SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -57,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
                     width: size.width * 0.9,
                     padding: const EdgeInsets.all(24),
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.08), // subtle glass
+                      color: Colors.white.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(28),
                       border: Border.all(
                         color: Colors.white.withOpacity(0.2),
@@ -76,16 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 20),
 
-                          // Text(
-                          //   "Welcome Back 👋",
-                          //   style: GoogleFonts.poppins(
-                          //     fontSize: 22,
-                          //     fontWeight: FontWeight.w600,
-                          //     color: Colors.white,
-                          //   ),
-                          // ),
-                          // const SizedBox(height: 30),
-
                           // Username
                           TextFormField(
                             style: const TextStyle(color: Colors.white),
@@ -93,12 +100,10 @@ class _LoginPageState extends State<LoginPage> {
                               "Username",
                               Icons.person,
                             ),
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return "Please enter the username";
-                              }
-                              return null;
-                            },
+                            onChanged: (val) => email = val,
+                            validator: (value) => value == null || value.isEmpty
+                                ? "Please enter the username"
+                                : null,
                           ),
                           const SizedBox(height: 20),
 
@@ -110,6 +115,7 @@ class _LoginPageState extends State<LoginPage> {
                               "Password",
                               Icons.lock,
                             ),
+                            onChanged: (val) => password = val,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
                                 return "Please enter the password";
@@ -144,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                               ],
                             ),
                             child: InkWell(
-                              onTap: moveToHome,
+                              onTap: _handleLogin, // 🔑 Replaced with API call
                               borderRadius: BorderRadius.circular(25),
                               child: Center(
                                 child: changeButton
@@ -165,7 +171,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           const SizedBox(height: 20),
 
-                          // Signup option
+                          // Signup Option
                           Text(
                             "Don’t have an account? Sign up",
                             style: GoogleFonts.poppins(
@@ -192,15 +198,14 @@ class _LoginPageState extends State<LoginPage> {
       labelText: label,
       labelStyle: const TextStyle(color: Colors.white70),
       filled: true,
-      fillColor: Color.fromRGBO(255, 255, 255, 0.12),
-      // cream glass effect
+      fillColor: const Color.fromRGBO(255, 255, 255, 0.12),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18.0),
-        borderSide: BorderSide(color: Color.fromRGBO(255, 255, 255, 0.3)),
+        borderSide: const BorderSide(color: Color.fromRGBO(255, 255, 255, 0.3)),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(18.0),
-        borderSide: const BorderSide(color: Color(0xFFF5F5DC)), // cream focus
+        borderSide: const BorderSide(color: Color(0xFFF5F5DC)),
       ),
     );
   }

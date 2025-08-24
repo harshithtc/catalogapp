@@ -1,22 +1,28 @@
 import 'package:flutter_catalog/core/store.dart';
 import 'package:flutter_catalog/models/catalog.dart';
+
 import 'package:velocity_x/velocity_x.dart';
 
 class CartModel {
-  late CatalogModel _catalog;
   final List<int> _itemIds = [];
 
-  CatalogModel get catalog => _catalog;
-
-  set catalog(CatalogModel newCatalog) {
-    _catalog = newCatalog;
-  }
-
-  // Non-nullable items list
-  List<Item> get items => _itemIds.map((id) => _catalog.getById(id)!).toList();
+  // Use static CatalogModel instead of instance
+  List<Item> get items =>
+      _itemIds.map((id) => CatalogModel().getById(id)!).toList();
 
   num get totalPrice =>
       items.fold(0, (total, current) => total + current.price);
+
+  void updateFromBackend(Map<String, dynamic> cartData) {
+    _itemIds.clear();
+
+    if (cartData['items'] != null) {
+      final items = cartData['items'] as List<dynamic>;
+      for (var item in items) {
+        _itemIds.add(item['product_id'] as int);
+      }
+    }
+  }
 }
 
 class AddMutation extends VxMutation<MyStore> {
@@ -25,7 +31,7 @@ class AddMutation extends VxMutation<MyStore> {
 
   @override
   perform() {
-    store!.cart._itemIds.add(item.id);
+    store.cart._itemIds.add(item.id);
   }
 }
 
@@ -35,6 +41,6 @@ class RemoveMutation extends VxMutation<MyStore> {
 
   @override
   perform() {
-    store!.cart._itemIds.remove(item.id);
+    store.cart._itemIds.remove(item.id);
   }
 }

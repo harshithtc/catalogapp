@@ -2,15 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_catalog/core/store.dart';
 import 'package:flutter_catalog/models/cart.dart';
-import 'dart:convert';
 import 'package:flutter_catalog/models/catalog.dart';
-import 'package:flutter_catalog/pages/cart_page.dart';
 import 'package:flutter_catalog/utils/routes.dart';
 import 'package:flutter_catalog/widgets/home_widgets/catalog_header.dart';
 import 'package:flutter_catalog/widgets/home_widgets/catalog_list.dart';
 import 'package:flutter_catalog/widgets/themes.dart';
 import 'package:velocity_x/velocity_x.dart';
-import 'package:http/http.dart' as http;
+
+import 'package:flutter_catalog/main.dart'; // 🔑 for `api`
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,41 +19,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final days = 30;
-
-  final name = "codeeeee";
-
-  final url =
-      "https://raw.githubusercontent.com/harshithtc/flutter_catalog_data/refs/heads/main/catalog.json";
-
   @override
   void initState() {
     super.initState();
     loadData();
   }
 
-  loadData() async {
+  Future<void> loadData() async {
     try {
-      // Fetch data from the URL
-      final response = await http.get(
-        Uri.parse(url.trim()),
-      ); // trim() removes extra space in URL
+      // 🔑 Fetch from backend
+      final products = await api.getProducts();
 
-      if (response.statusCode == 200) {
-        // Convert the response body to JSON
-        final decodedData = jsonDecode(response.body);
+      // 🔑 Map backend JSON into your CatalogModel
+      CatalogModel.items = products
+          .map<Item>((item) => Item.fromMap(item as Map<String, dynamic>))
+          .toList();
 
-        var productsData = decodedData["item"];
-        CatalogModel.items = List.from(
-          productsData,
-        ).map<Item>((item) => Item.fromMap(item)).toList();
-        setState(() {});
-      } else {
-        // Handle errors
-        print("Failed to load data. Status Code: ${response.statusCode}");
-      }
+      setState(() {});
     } catch (e) {
-      print("Error loading data: $e");
+      print("Error loading products: $e");
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text("Failed to load products: $e")));
     }
   }
 
